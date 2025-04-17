@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,7 +62,15 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				// Custom colors
+				ender: {
+					purple: '#9b87f5',
+					dark: '#1A1F2C',
+					darker: '#141824',
+					accent: '#8B5CF6',
+					glow: '#9b87f550'
+				},
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -84,12 +93,33 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'pulse-glow': {
+					'0%, 100%': {
+						boxShadow: '0 0 8px 2px var(--glow-color, #9b87f530)'
+					},
+					'50%': {
+						boxShadow: '0 0 12px 4px var(--glow-color, #9b87f520)'
+					}
+				},
+				'float': {
+					'0%, 100%': {
+						transform: 'translateY(0)'
+					},
+					'50%': {
+						transform: 'translateY(-10px)'
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
-			}
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'pulse-glow': 'pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+				'float': 'float 3s ease-in-out infinite'
+			},
+			boxShadow: {
+				'neon': '0 0 5px theme(colors.ender.glow), 0 0 20px theme(colors.ender.glow)',
+			},
 		}
 	},
 	plugins: [require("tailwindcss-animate")],
