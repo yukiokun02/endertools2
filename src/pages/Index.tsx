@@ -13,21 +13,21 @@ const Index = () => {
     {
       id: "merge-tool",
       title: "Resource Pack Merger",
-      description: "Combine multiple Minecraft resource packs into one effortlessly.",
+      description: "Easily combine multiple Minecraft resource packs into one - completely free to use.",
       icon: Package,
       buttonText: "Merge Packs"
     },
     {
       id: "link-tool",
       title: "Direct Download Link Generator",
-      description: "Upload and get an instant direct download URL for your server.",
+      description: "Create a free direct download URL for your resource pack in seconds.",
       icon: LinkIcon,
       buttonText: "Generate Link"
     },
     {
       id: "hash-tool",
       title: "SHA-1 Hash Generator",
-      description: "Instantly generate the SHA-1 hash required for your Minecraft resource pack.",
+      description: "Quickly get the SHA-1 hash for your Minecraft resource pack - no sign up required.",
       icon: Hash,
       buttonText: "Generate SHA-1"
     }
@@ -42,11 +42,11 @@ const Index = () => {
       <section id="tools" className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">Our <span className="text-ender-purple">Tools</span></h2>
+            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">Free <span className="text-ender-purple">Tools</span></h2>
             <div className="h-1 w-20 bg-ender-purple mx-auto rounded-full"></div>
             <p className="mt-6 text-gray-300 max-w-2xl mx-auto text-lg">
-              Powerful utilities designed specifically for Minecraft server administrators. 
-              Simple to use, yet highly effective.
+              Simple utilities to help with common Minecraft server tasks. 
+              All tools are free to use, with no login required.
             </p>
           </div>
           

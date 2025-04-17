@@ -30,14 +30,15 @@ const About = () => {
         <div className="flex flex-col md:flex-row gap-10 mb-16">
           <div className="md:w-1/2">
             <div className="card-gradient rounded-xl p-8 h-full border border-ender-purple/20">
-              <h3 className="text-2xl font-bold mb-4 text-white">Our Mission</h3>
+              <h3 className="text-2xl font-bold mb-4 text-white">Our Purpose</h3>
               <p className="text-gray-300 mb-6">
-                We build high-quality, user-friendly tools for Minecraft server administrators, 
-                making technical tasks simple and accessible.
+                We've gathered these useful tools in one place to make your Minecraft server management 
+                easier and more accessible - no complicated setups needed.
               </p>
               <p className="text-gray-300">
                 Endertools is maintained and developed by <span className="text-ender-purple font-semibold">EnderHOST</span>, 
-                with a focus on creating reliable utilities that streamline server management and enhance the gameplay experience.
+                and provided for free to the Minecraft community. These tools simplify common tasks 
+                that every server owner needs.
               </p>
             </div>
           </div>
@@ -45,18 +46,18 @@ const About = () => {
           <div className="md:w-1/2 grid grid-cols-1 gap-8">
             <AboutFeature 
               icon={Rocket}
-              title="Fast & Efficient"
-              description="Our tools are optimized for speed and performance, processing your resource packs quickly." 
+              title="Quick & Easy"
+              description="All tools work right in your browser - no downloads or installations required." 
             />
             <AboutFeature 
               icon={Bolt}
-              title="Easy to Use"
-              description="Simple interfaces designed for both beginners and experienced server administrators." 
+              title="Free to Use"
+              description="Every tool is 100% free with no hidden costs, logins, or limitations." 
             />
             <AboutFeature 
               icon={Shield}
-              title="Secure Processing"
-              description="Your files are processed securely and not stored longer than necessary on our servers." 
+              title="Privacy First"
+              description="Your files are processed in your browser and not stored on our servers." 
             />
           </div>
         </div>

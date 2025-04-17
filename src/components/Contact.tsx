@@ -13,7 +13,7 @@ const Contact = () => {
           <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">Contact Us</h2>
           <div className="h-1 w-20 bg-ender-purple mx-auto rounded-full"></div>
           <p className="mt-4 text-gray-300 max-w-2xl mx-auto">
-            Have questions or suggestions? We'd love to hear from you. Send us a message or connect through our social channels.
+            Have suggestions for new tools or improvements? We'd love to hear from you. Send us a message or connect through our channels.
           </p>
         </div>
         
@@ -71,7 +71,7 @@ const Contact = () => {
                 </div>
                 <div>
                   <h4 className="text-lg font-semibold text-white mb-1">Email Us</h4>
-                  <p className="text-gray-300 mb-3">Our friendly team is here to help</p>
+                  <p className="text-gray-300 mb-3">Questions or feedback about our tools</p>
                   <a 
                     href="mailto:support@enderhost.in" 
                     className="text-ender-purple hover:text-ender-accent transition-colors duration-200"
@@ -85,7 +85,7 @@ const Contact = () => {
             <div className="card-gradient rounded-xl p-8 border border-ender-purple/20 h-1/2">
               <div className="flex flex-col h-full">
                 <h4 className="text-lg font-semibold text-white mb-4">Connect With Us</h4>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <a 
                     href="#" 
                     className="p-3 bg-gray-800 hover:bg-ender-purple/20 rounded-lg transition-colors duration-200 flex items-center gap-2 group"

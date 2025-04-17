@@ -15,8 +15,8 @@ const Footer = () => {
               </span>
             </a>
             <p className="text-gray-400 mb-6">
-              Powerful utilities designed to make managing your Minecraft server easier.
-              Built by server admins, for server admins.
+              Free, easy-to-use tools for Minecraft server owners.
+              Simplifying common tasks for the Minecraft community.
             </p>
             <div className="flex space-x-4">
               <a
@@ -41,7 +41,7 @@ const Footer = () => {
           </div>
           
           <div>
-            <h3 className="text-lg font-semibold text-white mb-4">Features</h3>
+            <h3 className="text-lg font-semibold text-white mb-4">Free Tools</h3>
             <ul className="space-y-3">
               <li>
                 <a 
@@ -79,14 +79,14 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold text-white mb-6">Host With EnderHOST</h3>
             <p className="text-gray-400 mb-6">
-              Experience premium Minecraft server hosting with excellent support, 
-              high-performance hardware, and competitive pricing.
+              Looking for reliable Minecraft server hosting? Try EnderHOST's premium 
+              hosting with excellent support and competitive pricing.
             </p>
             <Button 
               className="bg-ender-purple hover:bg-ender-purple/90 text-ender-dark transition-all duration-200 font-medium w-full"
               onClick={() => window.open("https://www.enderhost.in", "_blank")}
             >
-              Host Your Server Now
+              Visit EnderHOST
             </Button>
           </div>
         </div>
