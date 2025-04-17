@@ -1,73 +1,163 @@
-# Welcome to your Lovable project
 
-## Project info
+# EnderTools - Minecraft Resource Pack Tools
 
-**URL**: https://lovable.dev/projects/33ca1b68-8299-43c7-84b5-48a2a1ae2703
+A collection of free tools for Minecraft server owners and resource pack creators. This project provides three main tools:
 
-## How can I edit this code?
+1. **Resource Pack Merger** - Combine two resource packs into one
+2. **Direct Download Link Generator** - Create shareable download links for resource packs
+3. **SHA-1 Hash Generator** - Generate SHA-1 hash for resource packs (required for server.properties)
 
-There are several ways of editing your application.
+## Features
 
-**Use Lovable**
+- **Easy to Use**: Simple drag-and-drop interface for all tools
+- **Fast Processing**: All tools are optimized for quick operation
+- **Free & Open Source**: No cost, no signup required
+- **Privacy-Focused**: Files are processed on your server, not sent to third parties
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/33ca1b68-8299-43c7-84b5-48a2a1ae2703) and start prompting.
+## Setup Instructions (Ubuntu/Debian)
 
-Changes made via Lovable will be committed automatically to this repo.
+### Prerequisites
 
-**Use your preferred IDE**
+- Node.js 16.x or higher
+- npm 8.x or higher
+- Git
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Installation
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/yourusername/endertools.git
+   cd endertools
+   ```
 
-Follow these steps:
+2. Run the start script to automatically install dependencies, build the frontend, and start the server:
+   ```bash
+   chmod +x start.sh
+   ./start.sh
+   ```
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+The application will be available at `http://your-server-ip:3001`.
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### Manual Installation
 
-# Step 3: Install the necessary dependencies.
-npm i
+If you prefer to install manually:
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+2. Build the frontend:
+   ```bash
+   npm run build
+   ```
+
+3. Start the server:
+   ```bash
+   NODE_ENV=production node src/backend/server.js
+   ```
+
+## Running as a Service (Production)
+
+To keep the application running after you close the terminal, you can create a systemd service:
+
+1. Create a service file:
+   ```bash
+   sudo nano /etc/systemd/system/endertools.service
+   ```
+
+2. Add the following content (update paths as needed):
+   ```
+   [Unit]
+   Description=EnderTools Server
+   After=network.target
+
+   [Service]
+   Type=simple
+   User=yourusername
+   WorkingDirectory=/path/to/endertools
+   ExecStart=/usr/bin/node /path/to/endertools/src/backend/server.js
+   Restart=on-failure
+   Environment=NODE_ENV=production
+   
+   [Install]
+   WantedBy=multi-user.target
+   ```
+
+3. Enable and start the service:
+   ```bash
+   sudo systemctl enable endertools
+   sudo systemctl start endertools
+   ```
+
+## Setting Up with Nginx (Optional)
+
+If you want to run the application on port 80 or with a domain name, you can set up Nginx as a reverse proxy:
+
+1. Install Nginx:
+   ```bash
+   sudo apt-get install nginx
+   ```
+
+2. Create a site configuration:
+   ```bash
+   sudo nano /etc/nginx/sites-available/endertools
+   ```
+
+3. Add the following configuration:
+   ```
+   server {
+       listen 80;
+       server_name yourdomain.com; # or your server IP
+
+       location / {
+           proxy_pass http://localhost:3001;
+           proxy_http_version 1.1;
+           proxy_set_header Upgrade $http_upgrade;
+           proxy_set_header Connection 'upgrade';
+           proxy_set_header Host $host;
+           proxy_cache_bypass $http_upgrade;
+       }
+   }
+   ```
+
+4. Enable the site and restart Nginx:
+   ```bash
+   sudo ln -s /etc/nginx/sites-available/endertools /etc/nginx/sites-enabled/
+   sudo nginx -t
+   sudo systemctl restart nginx
+   ```
+
+## Log Files
+
+Logs are stored in the `logs` directory:
+- `logs/activity.log` - Records all successful API requests
+- `logs/error.log` - Records errors and exceptions
+
+You can monitor logs in real-time using:
+```bash
+tail -f logs/error.log
 ```
 
-**Edit a file directly in GitHub**
+## Troubleshooting
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### File Upload Issues
+- Check that the `uploads` directory exists and has proper permissions
+- Verify the maximum file size limit (50MB by default)
 
-**Use GitHub Codespaces**
+### Server Won't Start
+- Check that port 3001 is not in use by another application
+- Verify you have the correct Node.js version installed
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### API Errors
+- Check the error logs: `cat logs/error.log`
+- Ensure the server has enough disk space for file processing
 
-## What technologies are used for this project?
+## Need Help?
 
-This project is built with:
+If you encounter any issues or need assistance, please check the logs or create an issue on the GitHub repository.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## License
 
-## How can I deploy this project?
+This project is provided by EnderHOST as a free service to the Minecraft community.
 
-Simply open [Lovable](https://lovable.dev/projects/33ca1b68-8299-43c7-84b5-48a2a1ae2703) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)

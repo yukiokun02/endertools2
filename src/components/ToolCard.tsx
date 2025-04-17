@@ -1,7 +1,10 @@
-import React from "react";
+
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { LucideIcon, Upload } from "lucide-react";
+import { LucideIcon, Upload, Download, Copy, CheckCircle, Loader2 } from "lucide-react";
 import ResourcePackUploader from "./ResourcePackUploader";
+import { mergeResourcePacks, generateDownloadLink, generateSHA1Hash } from "@/utils/api";
+import { toast } from "sonner";
 
 interface ToolCardProps {
   id: string;
@@ -12,48 +15,230 @@ interface ToolCardProps {
 }
 
 const ToolCard = ({ id, title, description, icon: Icon, buttonText }: ToolCardProps) => {
+  // State for file uploads and processing
+  const [pack1File, setPack1File] = useState<File | null>(null);
+  const [pack2File, setPack2File] = useState<File | null>(null);
+  const [singleFile, setSingleFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false);
+  
+  // State for results
+  const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+  const [sha1Hash, setSha1Hash] = useState<string | null>(null);
+  
+  // Handle file uploads
+  const handleFileSelected = (file: File, fileNumber?: number) => {
+    if (id === "merge-tool") {
+      if (fileNumber === 1) {
+        setPack1File(file);
+      } else if (fileNumber === 2) {
+        setPack2File(file);
+      }
+    } else {
+      setSingleFile(file);
+    }
+  };
+  
+  // Handle copy to clipboard
+  const handleCopyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text)
+      .then(() => toast.success("Copied to clipboard"))
+      .catch(() => toast.error("Failed to copy to clipboard"));
+  };
+  
+  // Process button click based on tool type
+  const handleProcessButtonClick = async () => {
+    setLoading(true);
+    
+    try {
+      switch (id) {
+        case "merge-tool":
+          if (!pack1File || !pack2File) {
+            toast.error("Please upload both resource packs");
+            return;
+          }
+          
+          const mergeResult = await mergeResourcePacks(pack1File, pack2File);
+          setDownloadUrl(mergeResult.downloadUrl);
+          toast.success("Resource packs merged successfully!");
+          break;
+          
+        case "link-tool":
+          if (!singleFile) {
+            toast.error("Please upload a resource pack");
+            return;
+          }
+          
+          const linkResult = await generateDownloadLink(singleFile);
+          setDownloadUrl(linkResult.downloadUrl);
+          toast.success("Download link generated successfully!");
+          break;
+          
+        case "hash-tool":
+          if (!singleFile) {
+            toast.error("Please upload a resource pack");
+            return;
+          }
+          
+          const hashResult = await generateSHA1Hash(singleFile);
+          setSha1Hash(hashResult.sha1Hash);
+          toast.success("SHA-1 hash generated successfully!");
+          break;
+      }
+    } catch (error) {
+      toast.error(`Error: ${(error as Error).message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  // Reset the tool state
+  const handleReset = () => {
+    setPack1File(null);
+    setPack2File(null);
+    setSingleFile(null);
+    setDownloadUrl(null);
+    setSha1Hash(null);
+  };
+  
+  // Render tool content based on tool type
   const renderToolContent = () => {
-    switch (id) {
-      case "merge-tool":
-        return (
-          <>
-            <ResourcePackUploader label="Resource Pack 1" />
-            <ResourcePackUploader label="Resource Pack 2" />
-            <Button 
-              className="w-full bg-ender-purple hover:bg-ender-purple/90 text-ender-dark transition-all duration-200 font-medium py-5 animate-pulse-glow"
-              style={{ "--glow-color": "rgba(155, 135, 245, 0.2)" } as React.CSSProperties}
-            >
-              Generate Merged Resource Pack
-            </Button>
-          </>
-        );
-      default:
-        return (
-          <>
-            <div className="group mb-6">
-              <div className="w-full p-4 border-2 border-dashed border-gray-700 rounded-lg bg-gray-800/50 hover:border-ender-purple/50 transition-colors duration-300 cursor-pointer min-h-[160px] flex flex-col items-center justify-center">
-                <Upload className="w-8 h-8 mb-2 text-gray-500 group-hover:text-ender-purple" />
-                <p className="text-sm text-gray-500 group-hover:text-gray-400">
-                  <span className="font-semibold">Drop your file here</span> or click to upload
-                </p>
-                <p className="text-xs text-gray-500">.zip files only (max. 50MB)</p>
-              </div>
+    // For the Merge Tool
+    if (id === "merge-tool") {
+      return (
+        <>
+          <ResourcePackUploader 
+            label="Resource Pack 1" 
+            onFileSelected={(file) => handleFileSelected(file, 1)}
+          />
+          <ResourcePackUploader 
+            label="Resource Pack 2" 
+            onFileSelected={(file) => handleFileSelected(file, 2)}
+          />
+          
+          {downloadUrl ? (
+            <div className="mt-4 text-center">
+              <p className="text-green-500 mb-3">Resource packs merged successfully!</p>
+              <a 
+                href={downloadUrl}
+                className="flex items-center justify-center gap-2 w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-md mb-3 transition-colors"
+                download
+              >
+                <Download className="w-5 h-5" />
+                Download Merged Pack
+              </a>
               <Button 
                 variant="outline" 
-                className="w-full mt-4 bg-gray-800/50 hover:bg-ender-purple/10 border-gray-700 text-gray-300"
+                className="w-full"
+                onClick={handleReset}
               >
-                <Upload className="w-4 h-4 mr-2" />
-                Select File
+                Merge Another Pack
               </Button>
             </div>
+          ) : (
             <Button 
               className="w-full bg-ender-purple hover:bg-ender-purple/90 text-ender-dark transition-all duration-200 font-medium py-5 animate-pulse-glow"
               style={{ "--glow-color": "rgba(155, 135, 245, 0.2)" } as React.CSSProperties}
+              onClick={handleProcessButtonClick}
+              disabled={!pack1File || !pack2File || loading}
             >
-              {buttonText}
+              {loading ? (
+                <>
+                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                  Merging...
+                </>
+              ) : (
+                buttonText
+              )}
             </Button>
-          </>
-        );
+          )}
+        </>
+      );
+    }
+    
+    // For Link Generator and SHA-1 Hash Generator
+    else {
+      return (
+        <>
+          <div className="mb-6">
+            <ResourcePackUploader 
+              label={id === "link-tool" ? "Resource Pack" : "Resource Pack or Server file"} 
+              onFileSelected={handleFileSelected}
+            />
+            
+            {/* Result display for download link */}
+            {id === "link-tool" && downloadUrl && (
+              <div className="mt-4 p-4 bg-gray-800 rounded-md">
+                <p className="text-sm text-gray-300 mb-2">Direct Download Link:</p>
+                <div className="flex items-center gap-2">
+                  <input 
+                    type="text" 
+                    readOnly 
+                    value={downloadUrl} 
+                    className="flex-grow p-2 bg-gray-700 text-white text-sm rounded border border-gray-600 overflow-x-auto overflow-ellipsis"
+                  />
+                  <Button
+                    size="icon"
+                    variant="outline"
+                    onClick={() => handleCopyToClipboard(downloadUrl)}
+                    className="flex-shrink-0"
+                  >
+                    <Copy className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            )}
+            
+            {/* Result display for SHA-1 hash */}
+            {id === "hash-tool" && sha1Hash && (
+              <div className="mt-4 p-4 bg-gray-800 rounded-md">
+                <p className="text-sm text-gray-300 mb-2">SHA-1 Hash:</p>
+                <div className="flex items-center gap-2">
+                  <input 
+                    type="text" 
+                    readOnly 
+                    value={sha1Hash} 
+                    className="flex-grow p-2 bg-gray-700 text-white text-sm rounded border border-gray-600 font-mono overflow-x-auto overflow-ellipsis"
+                  />
+                  <Button
+                    size="icon"
+                    variant="outline"
+                    onClick={() => handleCopyToClipboard(sha1Hash)}
+                    className="flex-shrink-0"
+                  >
+                    <Copy className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
+          
+          {(downloadUrl || sha1Hash) ? (
+            <Button 
+              variant="outline" 
+              className="w-full mt-4"
+              onClick={handleReset}
+            >
+              Process Another File
+            </Button>
+          ) : (
+            <Button 
+              className="w-full bg-ender-purple hover:bg-ender-purple/90 text-ender-dark transition-all duration-200 font-medium py-5 animate-pulse-glow"
+              style={{ "--glow-color": "rgba(155, 135, 245, 0.2)" } as React.CSSProperties}
+              onClick={handleProcessButtonClick}
+              disabled={!singleFile || loading}
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                buttonText
+              )}
+            </Button>
+          )}
+        </>
+      );
     }
   };
 
