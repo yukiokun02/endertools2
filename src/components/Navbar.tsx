@@ -87,28 +87,30 @@ const Navbar = () => {
                   className="text-white hover:text-ender-purple px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 flex items-center"
                 >
                   Tools
-                  <ChevronDown size={16} className="ml-1" />
+                  <ChevronDown size={16} className={`ml-1 transition-transform duration-200 ${isToolsDropdownOpen ? "rotate-180" : ""}`} />
                 </button>
                 
-                {isToolsDropdownOpen && (
-                  <div 
-                    className="absolute right-0 mt-2 w-60 rounded-md shadow-lg glass-effect ring-1 ring-ender-purple/30 focus:outline-none z-20"
-                  >
-                    <div className="py-1">
-                      {toolItems.map((tool, index) => (
-                        <a
-                          key={index}
-                          href={tool.href}
-                          className="text-white hover:bg-ender-purple/20 block px-4 py-3 text-sm flex items-center gap-2 transition-colors duration-200"
-                          onClick={() => setIsToolsDropdownOpen(false)}
-                        >
-                          {tool.icon}
-                          {tool.name}
-                        </a>
-                      ))}
-                    </div>
+                <div 
+                  className={`absolute right-0 mt-2 w-60 rounded-md shadow-lg glass-effect ring-1 ring-ender-purple/30 focus:outline-none z-20 transition-all duration-200 origin-top transform ${
+                    isToolsDropdownOpen 
+                      ? "opacity-100 scale-100" 
+                      : "opacity-0 scale-95 pointer-events-none"
+                  }`}
+                >
+                  <div className="py-1">
+                    {toolItems.map((tool, index) => (
+                      <a
+                        key={index}
+                        href={tool.href}
+                        className="text-white hover:bg-ender-purple/20 block px-4 py-3 text-sm flex items-center gap-2 transition-colors duration-200"
+                        onClick={() => setIsToolsDropdownOpen(false)}
+                      >
+                        {tool.icon}
+                        {tool.name}
+                      </a>
+                    ))}
                   </div>
-                )}
+                </div>
               </div>
               
               <a
@@ -142,11 +144,17 @@ const Navbar = () => {
       </div>
 
       {/* Mobile menu, show/hide based on menu state */}
-      <div className={`md:hidden ${isMenuOpen ? "block" : "hidden"}`}>
+      <div 
+        className={`md:hidden transition-all duration-300 transform ${
+          isMenuOpen 
+            ? "opacity-100 translate-y-0" 
+            : "opacity-0 -translate-y-5 pointer-events-none"
+        }`}
+      >
         <div className="px-2 pt-2 pb-3 space-y-1 glass-effect">
           <a
             href="#"
-            className="text-white hover:bg-ender-purple/20 block px-3 py-2 rounded-md text-base font-medium"
+            className="text-white hover:bg-ender-purple/20 block px-3 py-2 rounded-md text-base font-medium transition-all duration-200"
             onClick={() => setIsMenuOpen(false)}
           >
             Home
@@ -155,32 +163,36 @@ const Navbar = () => {
           <div>
             <button
               onClick={toggleToolsDropdown}
-              className="text-white hover:bg-ender-purple/20 w-full text-left px-3 py-2 rounded-md text-base font-medium flex items-center justify-between"
+              className="text-white hover:bg-ender-purple/20 w-full text-left px-3 py-2 rounded-md text-base font-medium flex items-center justify-between transition-all duration-200"
             >
               <span>Tools</span>
-              <ChevronDown size={16} />
+              <ChevronDown size={16} className={`transition-transform duration-200 ${isToolsDropdownOpen ? "rotate-180" : ""}`} />
             </button>
             
-            {isToolsDropdownOpen && (
-              <div className="pl-4 space-y-1 mt-1">
-                {toolItems.map((tool, index) => (
-                  <a
-                    key={index}
-                    href={tool.href}
-                    className="text-white hover:bg-ender-purple/20 block px-3 py-2 rounded-md text-sm flex items-center gap-2"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {tool.icon}
-                    {tool.name}
-                  </a>
-                ))}
-              </div>
-            )}
+            <div 
+              className={`pl-4 space-y-1 mt-1 transition-all duration-200 ${
+                isToolsDropdownOpen 
+                  ? "max-h-48 opacity-100" 
+                  : "max-h-0 opacity-0 overflow-hidden"
+              }`}
+            >
+              {toolItems.map((tool, index) => (
+                <a
+                  key={index}
+                  href={tool.href}
+                  className="text-white hover:bg-ender-purple/20 block px-3 py-2 rounded-md text-sm flex items-center gap-2 transition-all duration-200"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {tool.icon}
+                  {tool.name}
+                </a>
+              ))}
+            </div>
           </div>
           
           <a
             href="#about"
-            className="text-white hover:bg-ender-purple/20 block px-3 py-2 rounded-md text-base font-medium"
+            className="text-white hover:bg-ender-purple/20 block px-3 py-2 rounded-md text-base font-medium transition-all duration-200"
             onClick={() => setIsMenuOpen(false)}
           >
             About
@@ -188,7 +200,7 @@ const Navbar = () => {
           
           <a
             href="#contact"
-            className="text-white hover:bg-ender-purple/20 block px-3 py-2 rounded-md text-base font-medium"
+            className="text-white hover:bg-ender-purple/20 block px-3 py-2 rounded-md text-base font-medium transition-all duration-200"
             onClick={() => setIsMenuOpen(false)}
           >
             Contact

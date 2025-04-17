@@ -85,20 +85,20 @@ const Contact = () => {
             <div className="card-gradient rounded-xl p-8 border border-ender-purple/20 h-1/2">
               <div className="flex flex-col h-full">
                 <h4 className="text-lg font-semibold text-white mb-4">Connect With Us</h4>
-                <div className="flex flex-wrap gap-4 mt-2">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                   <a 
                     href="#" 
                     className="p-3 bg-gray-800 hover:bg-ender-purple/20 rounded-lg transition-colors duration-200 flex items-center gap-2 group"
                   >
-                    <Github size={20} className="text-gray-400 group-hover:text-ender-purple" />
-                    <span className="text-gray-300 group-hover:text-white">GitHub</span>
+                    <Github size={18} className="text-gray-400 group-hover:text-ender-purple" />
+                    <span className="text-gray-300 group-hover:text-white text-sm">GitHub</span>
                   </a>
                   <a 
                     href="#" 
                     className="p-3 bg-gray-800 hover:bg-ender-purple/20 rounded-lg transition-colors duration-200 flex items-center gap-2 group"
                   >
-                    <MessageSquare size={20} className="text-gray-400 group-hover:text-ender-purple" />
-                    <span className="text-gray-300 group-hover:text-white">Discord</span>
+                    <MessageSquare size={18} className="text-gray-400 group-hover:text-ender-purple" />
+                    <span className="text-gray-300 group-hover:text-white text-sm">Discord</span>
                   </a>
                   <a 
                     href="https://www.enderhost.in" 
@@ -106,12 +106,12 @@ const Contact = () => {
                     rel="noopener noreferrer"
                     className="p-3 bg-gray-800 hover:bg-ender-purple/20 rounded-lg transition-colors duration-200 flex items-center gap-2 group"
                   >
-                    <ExternalLink size={20} className="text-gray-400 group-hover:text-ender-purple" />
-                    <span className="text-gray-300 group-hover:text-white">EnderHOST</span>
+                    <ExternalLink size={18} className="text-gray-400 group-hover:text-ender-purple" />
+                    <span className="text-gray-300 group-hover:text-white text-sm">EnderHOST</span>
                   </a>
                 </div>
-                <div className="grow"></div>
-                <p className="text-gray-400 text-sm mt-4">
+                <div className="grow mt-4"></div>
+                <p className="text-gray-400 text-sm mt-auto">
                   We usually respond within 24-48 hours.
                 </p>
               </div>
