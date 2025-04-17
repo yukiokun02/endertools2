@@ -41,16 +41,16 @@ const Index = () => {
       {/* Tools Section */}
       <section id="tools" className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
+          <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">Our <span className="text-ender-purple">Tools</span></h2>
             <div className="h-1 w-20 bg-ender-purple mx-auto rounded-full"></div>
-            <p className="mt-4 text-gray-300 max-w-2xl mx-auto">
+            <p className="mt-6 text-gray-300 max-w-2xl mx-auto text-lg">
               Powerful utilities designed specifically for Minecraft server administrators. 
               Simple to use, yet highly effective.
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {tools.map((tool) => (
               <ToolCard 
                 key={tool.id}
