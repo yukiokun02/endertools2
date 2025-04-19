@@ -13,6 +13,7 @@ A collection of free tools for Minecraft server owners and resource pack creator
 - **Fast Processing**: All tools are optimized for quick operation
 - **Free & Open Source**: No cost, no signup required
 - **Privacy-Focused**: Files are processed on your server, not sent to third parties
+- **Contact Form**: Built-in contact form with spam protection
 
 ## Setup Instructions (Ubuntu/Debian)
 
@@ -37,6 +38,24 @@ A collection of free tools for Minecraft server owners and resource pack creator
    ```
 
 The application will be available at `http://your-server-ip:3001`.
+
+### Contact Form Setup
+
+To enable the contact form functionality, you need to set up SMTP credentials. You can set these as environment variables before starting the application:
+
+```bash
+export SMTP_HOST="smtp.gmail.com"
+export SMTP_PORT="587"
+export SMTP_USER="mail.enderhost@gmail.com"
+export SMTP_PASSWORD="your-app-password"
+export SMTP_SECURE="false"
+./start.sh
+```
+
+**Note for Gmail users**: You'll need to use an "App Password" instead of your regular account password. To generate an App Password:
+1. Enable 2-Step Verification for your Google account
+2. Go to Google Account > Security > App Passwords
+3. Generate a new App Password for "Mail" and use it as SMTP_PASSWORD
 
 ### Manual Installation
 
@@ -79,6 +98,11 @@ To keep the application running after you close the terminal, you can create a s
    ExecStart=/usr/bin/node /path/to/endertools/src/backend/server.js
    Restart=on-failure
    Environment=NODE_ENV=production
+   Environment=SMTP_HOST=smtp.gmail.com
+   Environment=SMTP_PORT=587
+   Environment=SMTP_USER=mail.enderhost@gmail.com
+   Environment=SMTP_PASSWORD=your-app-password
+   Environment=SMTP_SECURE=false
    
    [Install]
    WantedBy=multi-user.target
@@ -133,6 +157,7 @@ If you want to run the application on port 80 or with a domain name, you can set
 Logs are stored in the `logs` directory:
 - `logs/activity.log` - Records all successful API requests
 - `logs/error.log` - Records errors and exceptions
+- `logs/contact.log` - Records contact form submissions
 
 You can monitor logs in real-time using:
 ```bash
@@ -140,6 +165,11 @@ tail -f logs/error.log
 ```
 
 ## Troubleshooting
+
+### Contact Form Issues
+- Check that SMTP credentials are set correctly
+- Verify that your SMTP server allows the connection
+- Check logs/contact.log for submission attempts
 
 ### File Upload Issues
 - Check that the `uploads` directory exists and has proper permissions
@@ -160,4 +190,3 @@ If you encounter any issues or need assistance, please check the logs or create 
 ## License
 
 This project is provided by EnderHOST as a free service to the Minecraft community.
-

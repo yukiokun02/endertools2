@@ -7,6 +7,7 @@ const rfs = require('rotating-file-stream');
 const mergeRoutes = require('./routes/mergeRoutes');
 const linkRoutes = require('./routes/linkRoutes');
 const hashRoutes = require('./routes/hashRoutes');
+const contactRoutes = require('./routes/contactRoutes');
 const errorHandler = require('./middleware/errorHandler');
 
 // Create logs directory if it doesn't exist
@@ -44,8 +45,9 @@ if (process.env.NODE_ENV === 'production') {
 
 // API Routes
 app.use('/api/merge', mergeRoutes);
-app.use('/api/generate-link', linkRoutes);
-app.use('/api/generate-sha1', hashRoutes);
+app.use('/api/link', linkRoutes);
+app.use('/api/hash', hashRoutes);
+app.use('/api/contact', contactRoutes);
 
 // Error handling middleware
 app.use(errorHandler);

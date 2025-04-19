@@ -26,6 +26,17 @@ if ! command -v npm &> /dev/null; then
     exit 1
 fi
 
+# Check for environment variables
+if [ -z "$SMTP_PASSWORD" ]; then
+    echo -e "${BLUE}SMTP credentials not found in environment. Using default configuration.${NC}"
+    echo -e "${BLUE}To send emails, set these environment variables:${NC}"
+    echo "  SMTP_HOST - SMTP server hostname (default: smtp.gmail.com)"
+    echo "  SMTP_PORT - SMTP server port (default: 587)"
+    echo "  SMTP_USER - SMTP username (default: mail.enderhost@gmail.com)"
+    echo "  SMTP_PASSWORD - SMTP password (required for sending emails)"
+    echo "  SMTP_SECURE - Use TLS (true/false, default: false)"
+fi
+
 # Install dependencies
 echo -e "${BLUE}Installing dependencies...${NC}"
 npm install

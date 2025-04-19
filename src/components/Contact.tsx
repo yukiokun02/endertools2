@@ -1,11 +1,103 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Mail, MessageSquare, Github, ExternalLink } from "lucide-react";
+import { Mail, MessageSquare, Github, ExternalLink, Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import { 
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from "@/components/ui/form";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+// Define form schema with validation
+const contactFormSchema = z.object({
+  name: z.string().min(2, { message: "Name must be at least 2 characters" }),
+  email: z.string().email({ message: "Please enter a valid email address" }),
+  message: z.string().min(10, { message: "Message must be at least 10 characters" }),
+});
+
+type ContactFormValues = z.infer<typeof contactFormSchema>;
 
 const Contact = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [cooldownTime, setCooldownTime] = useState(0);
+  const [cooldownActive, setCooldownActive] = useState(false);
+
+  const form = useForm<ContactFormValues>({
+    resolver: zodResolver(contactFormSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      message: "",
+    },
+  });
+
+  const startCooldown = () => {
+    // Set initial cooldown time (5 minutes = 300 seconds)
+    setCooldownTime(300);
+    setCooldownActive(true);
+    
+    // Start countdown
+    const timer = setInterval(() => {
+      setCooldownTime((prevTime) => {
+        if (prevTime <= 1) {
+          clearInterval(timer);
+          setCooldownActive(false);
+          return 0;
+        }
+        return prevTime - 1;
+      });
+    }, 1000);
+  };
+
+  const formatCooldownTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
+  };
+
+  const onSubmit = async (data: ContactFormValues) => {
+    if (cooldownActive) {
+      toast.error(`Please wait ${formatCooldownTime(cooldownTime)} before sending another message.`);
+      return;
+    }
+    
+    setIsSubmitting(true);
+    
+    try {
+      const response = await fetch('/api/contact/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+      
+      const result = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to send message');
+      }
+      
+      toast.success("Message sent successfully!");
+      form.reset();
+      startCooldown();
+      
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to send message. Please try again later.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <section id="contact" className="py-20 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -21,43 +113,91 @@ const Contact = () => {
           <div className="card-gradient rounded-xl p-8 border border-ender-purple/20 overflow-hidden relative">
             <h3 className="text-xl font-bold mb-6 text-white">Send a Message</h3>
             
-            <form className="space-y-5">
-              <div>
-                <label htmlFor="name" className="block text-gray-300 mb-2 text-sm">Your Name</label>
-                <Input 
-                  id="name"
-                  className="bg-ender-darker border-gray-700 focus:border-ender-purple focus:ring-1 focus:ring-ender-purple/50 placeholder-gray-500 text-white"
-                  placeholder="John Doe"
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-300">Your Name</FormLabel>
+                      <FormControl>
+                        <Input 
+                          {...field}
+                          className="bg-ender-darker border-gray-700 focus:border-ender-purple focus:ring-1 focus:ring-ender-purple/50 placeholder-gray-500 text-white"
+                          placeholder="John Doe"
+                          disabled={isSubmitting || cooldownActive}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-              </div>
-              
-              <div>
-                <label htmlFor="email" className="block text-gray-300 mb-2 text-sm">Email Address</label>
-                <Input 
-                  id="email"
-                  type="email"
-                  className="bg-ender-darker border-gray-700 focus:border-ender-purple focus:ring-1 focus:ring-ender-purple/50 placeholder-gray-500 text-white"
-                  placeholder="you@example.com"
+                
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-300">Email Address</FormLabel>
+                      <FormControl>
+                        <Input 
+                          {...field}
+                          type="email"
+                          className="bg-ender-darker border-gray-700 focus:border-ender-purple focus:ring-1 focus:ring-ender-purple/50 placeholder-gray-500 text-white"
+                          placeholder="you@example.com"
+                          disabled={isSubmitting || cooldownActive}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-              </div>
-              
-              <div>
-                <label htmlFor="message" className="block text-gray-300 mb-2 text-sm">Message</label>
-                <Textarea 
-                  id="message"
-                  className="bg-ender-darker border-gray-700 focus:border-ender-purple focus:ring-1 focus:ring-ender-purple/50 placeholder-gray-500 text-white"
-                  placeholder="Your message here..."
-                  rows={4}
+                
+                <FormField
+                  control={form.control}
+                  name="message"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-300">Message</FormLabel>
+                      <FormControl>
+                        <Textarea 
+                          {...field}
+                          className="bg-ender-darker border-gray-700 focus:border-ender-purple focus:ring-1 focus:ring-ender-purple/50 placeholder-gray-500 text-white"
+                          placeholder="Your message here..."
+                          rows={4}
+                          disabled={isSubmitting || cooldownActive}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-              </div>
-              
-              <Button 
-                type="button" 
-                className="w-full bg-ender-purple hover:bg-ender-purple/90 text-ender-dark transition-all duration-200 font-medium py-5"
-              >
-                Send Message
-              </Button>
-            </form>
+                
+                <Button 
+                  type="submit" 
+                  className="w-full bg-ender-purple hover:bg-ender-purple/90 text-ender-dark transition-all duration-200 font-medium py-5"
+                  disabled={isSubmitting || cooldownActive}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Sending...
+                    </>
+                  ) : cooldownActive ? (
+                    `Wait ${formatCooldownTime(cooldownTime)}`
+                  ) : (
+                    "Send Message"
+                  )}
+                </Button>
+                
+                {cooldownActive && (
+                  <p className="text-sm text-gray-400 text-center">
+                    You can send another message in {formatCooldownTime(cooldownTime)}
+                  </p>
+                )}
+              </form>
+            </Form>
             
             {/* Background gradient */}
             <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-ender-purple/20 rounded-full filter blur-2xl"></div>
@@ -73,10 +213,10 @@ const Contact = () => {
                   <h4 className="text-lg font-semibold text-white mb-1">Email Us</h4>
                   <p className="text-gray-300 mb-3">Questions or feedback about our tools</p>
                   <a 
-                    href="mailto:support@enderhost.in" 
+                    href="mailto:mail.enderhost@gmail.com" 
                     className="text-ender-purple hover:text-ender-accent transition-colors duration-200"
                   >
-                    support@enderhost.in
+                    mail.enderhost@gmail.com
                   </a>
                 </div>
               </div>
