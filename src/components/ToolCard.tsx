@@ -1,10 +1,10 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { LucideIcon, Upload, Download, Copy, CheckCircle, Loader2 } from "lucide-react";
 import ResourcePackUploader from "./ResourcePackUploader";
 import { mergeResourcePacks, generateDownloadLink, generateSHA1Hash } from "@/utils/api";
 import { toast } from "sonner";
+import { Input } from "@/components/ui/input";
 
 interface ToolCardProps {
   id: string;
@@ -15,17 +15,14 @@ interface ToolCardProps {
 }
 
 const ToolCard = ({ id, title, description, icon: Icon, buttonText }: ToolCardProps) => {
-  // State for file uploads and processing
   const [pack1File, setPack1File] = useState<File | null>(null);
   const [pack2File, setPack2File] = useState<File | null>(null);
   const [singleFile, setSingleFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   
-  // State for results
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
   const [sha1Hash, setSha1Hash] = useState<string | null>(null);
   
-  // Handle file uploads
   const handleFileSelected = (file: File, fileNumber?: number) => {
     if (id === "merge-tool") {
       if (fileNumber === 1) {
@@ -38,14 +35,12 @@ const ToolCard = ({ id, title, description, icon: Icon, buttonText }: ToolCardPr
     }
   };
   
-  // Handle copy to clipboard
   const handleCopyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text)
       .then(() => toast.success("Copied to clipboard"))
       .catch(() => toast.error("Failed to copy to clipboard"));
   };
   
-  // Process button click based on tool type
   const handleProcessButtonClick = async () => {
     setLoading(true);
     
@@ -91,7 +86,6 @@ const ToolCard = ({ id, title, description, icon: Icon, buttonText }: ToolCardPr
     }
   };
   
-  // Reset the tool state
   const handleReset = () => {
     setPack1File(null);
     setPack2File(null);
@@ -100,9 +94,7 @@ const ToolCard = ({ id, title, description, icon: Icon, buttonText }: ToolCardPr
     setSha1Hash(null);
   };
   
-  // Render tool content based on tool type
   const renderToolContent = () => {
-    // For the Merge Tool
     if (id === "merge-tool") {
       return (
         <>
@@ -155,91 +147,86 @@ const ToolCard = ({ id, title, description, icon: Icon, buttonText }: ToolCardPr
       );
     }
     
-    // For Link Generator and SHA-1 Hash Generator
-    else {
-      return (
-        <>
-          <div className="mb-6">
-            <ResourcePackUploader 
-              label={id === "link-tool" ? "Resource Pack" : "Resource Pack or Server file"} 
-              onFileSelected={handleFileSelected}
-            />
-            
-            {/* Result display for download link */}
-            {id === "link-tool" && downloadUrl && (
-              <div className="mt-4 p-4 bg-gray-800 rounded-md">
-                <p className="text-sm text-gray-300 mb-2">Direct Download Link:</p>
-                <div className="flex items-center gap-2">
-                  <input 
-                    type="text" 
-                    readOnly 
-                    value={downloadUrl} 
-                    className="flex-grow p-2 bg-gray-700 text-white text-sm rounded border border-gray-600 overflow-x-auto overflow-ellipsis"
-                  />
-                  <Button
-                    size="icon"
-                    variant="outline"
-                    onClick={() => handleCopyToClipboard(downloadUrl)}
-                    className="flex-shrink-0"
-                  >
-                    <Copy className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
-            )}
-            
-            {/* Result display for SHA-1 hash */}
-            {id === "hash-tool" && sha1Hash && (
-              <div className="mt-4 p-4 bg-gray-800 rounded-md">
-                <p className="text-sm text-gray-300 mb-2">SHA-1 Hash:</p>
-                <div className="flex items-center gap-2">
-                  <input 
-                    type="text" 
-                    readOnly 
-                    value={sha1Hash} 
-                    className="flex-grow p-2 bg-gray-700 text-white text-sm rounded border border-gray-600 font-mono overflow-x-auto overflow-ellipsis"
-                  />
-                  <Button
-                    size="icon"
-                    variant="outline"
-                    onClick={() => handleCopyToClipboard(sha1Hash)}
-                    className="flex-shrink-0"
-                  >
-                    <Copy className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
-            )}
-          </div>
+    return (
+      <>
+        <div className="mb-6">
+          <ResourcePackUploader 
+            label={id === "link-tool" ? "Resource Pack" : "Resource Pack or Server file"} 
+            onFileSelected={handleFileSelected}
+          />
           
-          {(downloadUrl || sha1Hash) ? (
-            <Button 
-              variant="outline" 
-              className="w-full mt-4"
-              onClick={handleReset}
-            >
-              Process Another File
-            </Button>
-          ) : (
-            <Button 
-              className="w-full bg-ender-purple hover:bg-ender-purple/90 text-ender-dark transition-all duration-200 font-medium py-5 animate-pulse-glow"
-              style={{ "--glow-color": "rgba(155, 135, 245, 0.2)" } as React.CSSProperties}
-              onClick={handleProcessButtonClick}
-              disabled={!singleFile || loading}
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                  Processing...
-                </>
-              ) : (
-                buttonText
-              )}
-            </Button>
+          {id === "link-tool" && downloadUrl && (
+            <div className="mt-4 space-y-2">
+              <p className="text-sm text-gray-300">Direct Download Link:</p>
+              <div className="flex items-center gap-2">
+                <Input
+                  type="text" 
+                  readOnly 
+                  value={downloadUrl}
+                  className="flex-grow font-mono text-sm bg-gray-800/50 border-gray-700"
+                />
+                <Button
+                  size="icon"
+                  variant="secondary"
+                  onClick={() => handleCopyToClipboard(downloadUrl)}
+                  className="flex-shrink-0 hover:bg-gray-700"
+                >
+                  <Copy className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
           )}
-        </>
-      );
-    }
+          
+          {id === "hash-tool" && sha1Hash && (
+            <div className="mt-4 space-y-2">
+              <p className="text-sm text-gray-300">SHA-1 Hash:</p>
+              <div className="flex items-center gap-2">
+                <Input
+                  type="text" 
+                  readOnly 
+                  value={sha1Hash}
+                  className="flex-grow font-mono text-sm bg-gray-800/50 border-gray-700"
+                />
+                <Button
+                  size="icon"
+                  variant="secondary"
+                  onClick={() => handleCopyToClipboard(sha1Hash)}
+                  className="flex-shrink-0 hover:bg-gray-700"
+                >
+                  <Copy className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
+        
+        {(downloadUrl || sha1Hash) ? (
+          <Button 
+            variant="outline" 
+            className="w-full mt-4"
+            onClick={handleReset}
+          >
+            Process Another File
+          </Button>
+        ) : (
+          <Button 
+            className="w-full bg-ender-purple hover:bg-ender-purple/90 text-ender-dark transition-all duration-200 font-medium py-5 animate-pulse-glow"
+            style={{ "--glow-color": "rgba(155, 135, 245, 0.2)" } as React.CSSProperties}
+            onClick={handleProcessButtonClick}
+            disabled={!singleFile || loading}
+          >
+            {loading ? (
+              <>
+                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                Processing...
+              </>
+            ) : (
+              buttonText
+            )}
+          </Button>
+        )}
+      </>
+    );
   };
 
   return (
