@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,7 +16,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-// Define form schema with validation
 const contactFormSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters" }),
   email: z.string().email({ message: "Please enter a valid email address" }),
@@ -41,11 +39,9 @@ const Contact = () => {
   });
 
   const startCooldown = () => {
-    // Set initial cooldown time (5 minutes = 300 seconds)
     setCooldownTime(300);
     setCooldownActive(true);
     
-    // Start countdown
     const timer = setInterval(() => {
       setCooldownTime((prevTime) => {
         if (prevTime <= 1) {
@@ -199,7 +195,6 @@ const Contact = () => {
               </form>
             </Form>
             
-            {/* Background gradient */}
             <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-ender-purple/20 rounded-full filter blur-2xl"></div>
           </div>
           
@@ -213,10 +208,10 @@ const Contact = () => {
                   <h4 className="text-lg font-semibold text-white mb-1">Email Us</h4>
                   <p className="text-gray-300 mb-3">Questions or feedback about our tools</p>
                   <a 
-                    href="mailto:mail.enderhost@gmail.com" 
+                    href="mailto:mail@enderhost.in" 
                     className="text-ender-purple hover:text-ender-accent transition-colors duration-200"
                   >
-                    mail.enderhost@gmail.com
+                    mail@enderhost.in
                   </a>
                 </div>
               </div>

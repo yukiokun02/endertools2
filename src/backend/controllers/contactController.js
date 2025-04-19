@@ -1,4 +1,3 @@
-
 const nodemailer = require('nodemailer');
 const path = require('path');
 const fs = require('fs');
@@ -20,7 +19,7 @@ const transporter = nodemailer.createTransport({
   port: process.env.SMTP_PORT || 587,
   secure: process.env.SMTP_SECURE === 'true' || false,
   auth: {
-    user: process.env.SMTP_USER || 'mail.enderhost@gmail.com',
+    user: process.env.SMTP_USER || 'mail@enderhost.in',
     pass: process.env.SMTP_PASSWORD || '',
   },
 });
@@ -56,8 +55,8 @@ const submitContactForm = async (req, res) => {
     
     // Build email
     const mailOptions = {
-      from: `"EnderTools Contact" <${process.env.SMTP_USER || 'mail.enderhost@gmail.com'}>`,
-      to: 'mail.enderhost@gmail.com',
+      from: `"EnderTools Contact" <${process.env.SMTP_USER || 'mail@enderhost.in'}>`,
+      to: 'mail@enderhost.in',
       subject: `[EnderTools Contact] New message from ${name}`,
       text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
       html: `
