@@ -56,94 +56,95 @@ const Navbar = () => {
   ];
 
   return (
-    <nav
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+    <div className="fixed top-0 left-0 w-full z-50">
+      {/* Main navbar - only this part gets the blur effect */}
+      <div className={`transition-all duration-300 ${
         scrolled ? "glass-effect" : "bg-transparent"
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <div className="flex-shrink-0">
-            <a href="#" className="flex items-center">
-              <span className="text-xl font-bold text-white tracking-tight">
-                <span className="text-ender-purple">Ender</span>Tools
-              </span>
-            </a>
-          </div>
-          
-          {/* Desktop navigation */}
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-4">
-              <a
-                href="#"
-                className="text-white hover:text-ender-purple px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
-              >
-                Home
-              </a>
-              
-              <div className="relative">
-                <button
-                  onClick={toggleToolsDropdown}
-                  className="text-white hover:text-ender-purple px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 flex items-center"
-                >
-                  Tools
-                  <ChevronDown size={16} className={`ml-1 transition-transform duration-200 ${isToolsDropdownOpen ? "rotate-180" : ""}`} />
-                </button>
-                
-                <div 
-                  className={`absolute right-0 mt-2 w-60 rounded-md shadow-lg glass-effect ring-1 ring-ender-purple/30 focus:outline-none z-20 transition-all duration-200 origin-top transform ${
-                    isToolsDropdownOpen 
-                      ? "opacity-100 scale-100" 
-                      : "opacity-0 scale-95 pointer-events-none"
-                  }`}
-                >
-                  <div className="py-1">
-                    {toolItems.map((tool, index) => (
-                      <a
-                        key={index}
-                        href={tool.href}
-                        className="text-white hover:bg-ender-purple/20 block px-4 py-3 text-sm flex items-center gap-2 transition-colors duration-200"
-                        onClick={() => setIsToolsDropdownOpen(false)}
-                      >
-                        {tool.icon}
-                        {tool.name}
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              
-              <a
-                href="#about"
-                className="text-white hover:text-ender-purple px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
-              >
-                About
-              </a>
-              
-              <a
-                href="#contact"
-                className="text-white hover:text-ender-purple px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
-              >
-                Contact
+      }`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex-shrink-0">
+              <a href="#" className="flex items-center">
+                <span className="text-xl font-bold text-white tracking-tight">
+                  <span className="text-ender-purple">Ender</span>Tools
+                </span>
               </a>
             </div>
-          </div>
-          
-          {/* Mobile menu button */}
-          <div className="md:hidden">
-            <button
-              onClick={toggleMenu}
-              className="inline-flex items-center justify-center p-2 rounded-md text-white hover:text-ender-purple focus:outline-none"
-              aria-expanded="false"
-            >
-              <span className="sr-only">Open main menu</span>
-              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+            
+            {/* Desktop navigation */}
+            <div className="hidden md:block">
+              <div className="ml-10 flex items-baseline space-x-4">
+                <a
+                  href="#"
+                  className="text-white hover:text-ender-purple px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+                >
+                  Home
+                </a>
+                
+                <div className="relative">
+                  <button
+                    onClick={toggleToolsDropdown}
+                    className="text-white hover:text-ender-purple px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 flex items-center"
+                  >
+                    Tools
+                    <ChevronDown size={16} className={`ml-1 transition-transform duration-200 ${isToolsDropdownOpen ? "rotate-180" : ""}`} />
+                  </button>
+                  
+                  <div 
+                    className={`absolute right-0 mt-2 w-60 rounded-md shadow-lg glass-effect ring-1 ring-ender-purple/30 focus:outline-none z-20 transition-all duration-200 origin-top transform ${
+                      isToolsDropdownOpen 
+                        ? "opacity-100 scale-100" 
+                        : "opacity-0 scale-95 pointer-events-none"
+                    }`}
+                  >
+                    <div className="py-1">
+                      {toolItems.map((tool, index) => (
+                        <a
+                          key={index}
+                          href={tool.href}
+                          className="text-white hover:bg-ender-purple/20 block px-4 py-3 text-sm flex items-center gap-2 transition-colors duration-200"
+                          onClick={() => setIsToolsDropdownOpen(false)}
+                        >
+                          {tool.icon}
+                          {tool.name}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                
+                <a
+                  href="#about"
+                  className="text-white hover:text-ender-purple px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+                >
+                  About
+                </a>
+                
+                <a
+                  href="#contact"
+                  className="text-white hover:text-ender-purple px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+                >
+                  Contact
+                </a>
+              </div>
+            </div>
+            
+            {/* Mobile menu button */}
+            <div className="md:hidden">
+              <button
+                onClick={toggleMenu}
+                className="inline-flex items-center justify-center p-2 rounded-md text-white hover:text-ender-purple focus:outline-none"
+                aria-expanded="false"
+              >
+                <span className="sr-only">Open main menu</span>
+                {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Mobile menu, show/hide based on menu state */}
+      {/* Mobile menu, separate from navbar and with its own styling */}
       <div 
         className={`md:hidden transition-all duration-300 transform ${
           isMenuOpen 
@@ -207,7 +208,7 @@ const Navbar = () => {
           </a>
         </div>
       </div>
-    </nav>
+    </div>
   );
 };
 
