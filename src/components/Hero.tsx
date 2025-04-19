@@ -18,17 +18,17 @@ const Hero = () => {
             100% free and ready to use.
           </p>
           <div className="mt-8 max-w-sm mx-auto sm:max-w-none sm:flex sm:justify-center">
-            <div className="space-y-4 sm:space-y-0 sm:space-x-4">
+            <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
               <a
                 href="#tools"
-                className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-ender-dark bg-ender-purple hover:bg-ender-purple/90 md:py-4 md:text-lg md:px-10 transition-all duration-200 animate-pulse-glow"
+                className="flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-ender-dark bg-ender-purple hover:bg-ender-purple/90 md:py-4 md:text-lg md:px-10 transition-all duration-200 animate-pulse-glow"
                 style={{ "--glow-color": "rgba(155, 135, 245, 0.3)" } as React.CSSProperties}
               >
                 Try Our Free Tools
               </a>
               <a
                 href="#about"
-                className="w-full flex items-center justify-center px-8 py-3 border border-ender-purple text-base font-medium rounded-md text-white bg-transparent hover:bg-ender-purple/10 md:py-4 md:text-lg md:px-10 transition-all duration-200"
+                className="flex items-center justify-center px-8 py-3 border border-ender-purple text-base font-medium rounded-md text-white bg-transparent hover:bg-ender-purple/10 md:py-4 md:text-lg md:px-10 transition-all duration-200"
               >
                 Learn More
               </a>
