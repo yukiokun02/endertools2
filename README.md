@@ -38,12 +38,28 @@ export SMTP_SECURE="false"
 npm run build
 ```
 
-5. Set up PM2 for process management:
+5. Set up the server:
+
+Create a server startup script:
+```bash
+echo "node src/backend/server.js" > start-server.sh
+chmod +x start-server.sh
+```
+
+6. Set up PM2 for process management:
 ```bash
 npm install -g pm2
-pm2 start npm --name "endertools" -- start
+# Start the application with PM2
+pm2 start start-server.js --name "endertools"
+# OR directly with node
+pm2 start src/backend/server.js --name "endertools"
 pm2 startup # Follow the instructions to make PM2 start on boot
 pm2 save
+```
+
+7. Check PM2 logs if you encounter issues:
+```bash
+pm2 logs endertools
 ```
 
 ## Nginx Configuration
@@ -66,7 +82,7 @@ server {
     server_name yourdomain.com www.yourdomain.com;
 
     location / {
-        proxy_pass http://localhost:3000;
+        proxy_pass http://localhost:3001;  # Note: Our server runs on port 3001
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
@@ -107,23 +123,56 @@ chown -R www-data:www-data /var/www/endertools/uploads
 chmod -R 755 /var/www/endertools/uploads
 ```
 
-## Maintenance
+## Troubleshooting Common Issues
 
-- Monitor logs: `pm2 logs endertools`
-- Restart application: `pm2 restart endertools`
-- View status: `pm2 status`
+If the application shows "errored" in PM2:
 
-## Troubleshooting
+1. Check application logs for detailed error messages:
+```bash
+pm2 logs endertools
+```
 
-If you encounter issues:
-1. Check application logs: `pm2 logs endertools`
-2. Verify Nginx configuration: `sudo nginx -t`
-3. Check Nginx error logs: `sudo tail -f /var/nginx/error.log`
+2. Common issues and solutions:
 
-For the contact form to work properly, make sure to:
-1. Configure your SMTP settings correctly
-2. Use a valid app password if using Gmail
-3. Test the contact form after setup
+   a. **Port already in use**:
+   ```bash
+   # Check what's using port 3001
+   sudo lsof -i :3001
+   # Kill the process if needed
+   sudo kill -9 <PID>
+   ```
+
+   b. **Missing environment variables**:
+   ```bash
+   # Make sure all required environment variables are set
+   # Use a startup script or PM2 ecosystem file
+   echo "export SMTP_HOST=smtp.gmail.com
+   export SMTP_PORT=587
+   export SMTP_USER=mail@enderhost.in
+   export SMTP_PASSWORD=your-app-password
+   export SMTP_SECURE=false
+   node src/backend/server.js" > start-app.sh
+   chmod +x start-app.sh
+   pm2 start ./start-app.sh --name "endertools"
+   ```
+
+   c. **Permission issues**:
+   ```bash
+   # Ensure proper ownership of the application files
+   sudo chown -R $USER:$USER /path/to/endertools
+   ```
+
+   d. **Node.js version issues**:
+   ```bash
+   # Verify you're using Node.js 18 or higher
+   node -v
+   # Install or update if needed using NVM
+   ```
+
+3. Check Nginx error logs:
+```bash
+sudo tail -f /var/log/nginx/error.log
+```
 
 For security:
 1. Configure a firewall (UFW recommended)
