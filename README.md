@@ -42,17 +42,16 @@ npm run build
 
 Create a server startup script:
 ```bash
-echo "node src/backend/server.js" > start-server.sh
 chmod +x start-server.sh
 ```
 
 6. Set up PM2 for process management:
 ```bash
 npm install -g pm2
-# Start the application with PM2
-pm2 start start-server.js --name "endertools"
-# OR directly with node
-pm2 start src/backend/server.js --name "endertools"
+# Start the application with PM2 using the start script
+pm2 start ./start-server.sh --name "endertools"
+# OR directly with node (if start-server.sh doesn't work)
+pm2 start src/backend/server.js --name "endertools-server" --env.SMTP_HOST=smtp.gmail.com --env.SMTP_PORT=587 --env.SMTP_USER=mail@enderhost.in --env.SMTP_PASSWORD=your-app-password --env.SMTP_SECURE=false
 pm2 startup # Follow the instructions to make PM2 start on boot
 pm2 save
 ```
@@ -134,7 +133,15 @@ pm2 logs endertools
 
 2. Common issues and solutions:
 
-   a. **Port already in use**:
+   a. **Script permissions issue**:
+   ```bash
+   # Make sure the start script is executable
+   chmod +x start-server.sh
+   # Try running it directly to check for errors
+   ./start-server.sh
+   ```
+
+   b. **Port already in use**:
    ```bash
    # Check what's using port 3001
    sudo lsof -i :3001
@@ -142,27 +149,19 @@ pm2 logs endertools
    sudo kill -9 <PID>
    ```
 
-   b. **Missing environment variables**:
+   c. **Missing environment variables**:
    ```bash
-   # Make sure all required environment variables are set
-   # Use a startup script or PM2 ecosystem file
-   echo "export SMTP_HOST=smtp.gmail.com
-   export SMTP_PORT=587
-   export SMTP_USER=mail@enderhost.in
-   export SMTP_PASSWORD=your-app-password
-   export SMTP_SECURE=false
-   node src/backend/server.js" > start-app.sh
-   chmod +x start-app.sh
-   pm2 start ./start-app.sh --name "endertools"
+   # Try starting the server directly with environment variables
+   SMTP_HOST=smtp.gmail.com SMTP_PORT=587 SMTP_USER=mail@enderhost.in SMTP_PASSWORD=your-app-password SMTP_SECURE=false node src/backend/server.js
    ```
 
-   c. **Permission issues**:
+   d. **Permission issues**:
    ```bash
    # Ensure proper ownership of the application files
    sudo chown -R $USER:$USER /path/to/endertools
    ```
 
-   d. **Node.js version issues**:
+   e. **Node.js version issues**:
    ```bash
    # Verify you're using Node.js 18 or higher
    node -v
@@ -172,6 +171,30 @@ pm2 logs endertools
 3. Check Nginx error logs:
 ```bash
 sudo tail -f /var/log/nginx/error.log
+```
+
+4. If the start-server.sh script is causing issues, try using the PM2 ecosystem file approach:
+```bash
+# Create ecosystem.config.js
+cat > ecosystem.config.js << 'EOL'
+module.exports = {
+  apps: [{
+    name: "endertools",
+    script: "src/backend/server.js",
+    env: {
+      SMTP_HOST: "smtp.gmail.com",
+      SMTP_PORT: "587",
+      SMTP_USER: "mail@enderhost.in",
+      SMTP_PASSWORD: "your-app-password",
+      SMTP_SECURE: "false"
+    }
+  }]
+}
+EOL
+
+# Start using the ecosystem file
+pm2 start ecosystem.config.js
+pm2 save
 ```
 
 For security:

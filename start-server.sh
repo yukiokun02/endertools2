@@ -9,4 +9,4 @@ export SMTP_PASSWORD="${SMTP_PASSWORD:-your-app-password}"
 export SMTP_SECURE="${SMTP_SECURE:-false}"
 
 # Start the server
-node src/backend/server.js
+exec node src/backend/server.js
